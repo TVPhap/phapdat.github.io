@@ -1,0 +1,103 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct Student {
+    int id;
+    string last_name;
+    string first_name;
+    string birth_date;
+    string gender;
+    double gpa;
+};
+
+// Đọc danh sách sinh viên từ tập tin
+void read_students_from_file(const string& filename, vector<Student>& students) {
+    ifstream file(filename);
+    if (file.is_open()) {
+        Student student;
+        while (file >> student.id >> student.last_name >> student.first_name >> student.birth_date >> student.gender >> student.gpa) {
+            students.push_back(student);
+        }
+        file.close();
+    } else {
+        cerr << "Không thể mở tập tin " << filename << endl;
+    }
+}
+
+// Tạo chỉ mục sắp xếp theo Mã sinh viên tăng dần
+void create_index_by_id(const vector<Student>& students, const string& filename) {
+    vector<int> index(students.size());
+    iota(index.begin(), index.end(), 0); // Khởi tạo chỉ số từ 0 đến students.size()-1
+    sort(index.begin(), index.end(), [&students](int i, int j) {
+        return students[i].id < students[j].id;
+    });
+
+    ofstream file(filename);
+    if (file.is_open()) {
+        for (const auto& i : index) {
+            file << students[i].id << "\n";
+        }
+        file.close();
+    } else {
+        cerr << "Không thể mở tập tin " << filename << " để ghi." << endl;
+    }
+}
+
+// Tạo chỉ mục sắp xếp theo Tên sinh viên từ A -> Z
+void create_index_by_name(const vector<Student>& students, const string& filename) {
+    vector<int> index(students.size());
+    iota(index.begin(), index.end(), 0);
+    sort(index.begin(), index.end(), [&students](int i, int j) {
+        if (students[i].first_name == students[j].first_name) {
+            return students[i].last_name < students[j].last_name;
+        }
+        return students[i].first_name < students[j].first_name;
+    });
+
+    ofstream file(filename);
+    if (file.is_open()) {
+        for (const auto& i : index) {
+            file << students[i].id << "\n";
+        }
+        file.close();
+    } else {
+        cerr << "Không thể mở tập tin " << filename << " để ghi." << endl;
+    }
+}
+
+// Tạo chỉ mục sắp xếp theo Điểm trung bình giảm dần
+void create_index_by_gpa(const vector<Student>& students, const string& filename) {
+    vector<int> index(students.size());
+    iota(index.begin(), index.end(), 0);
+    sort(index.begin(), index.end(), [&students](int i, int j) {
+        return students[i].gpa > students[j].gpa;
+    });
+
+    ofstream file(filename);
+    if (file.is_open()) {
+        for (const auto& i : index) {
+            file << students[i].id << "\n";
+        }
+        file.close();
+    } else {
+        cerr << "Không thể mở tập tin " << filename << " để ghi." << endl;
+    }
+}
+
+int main() {
+    vector<Student> students;
+    read_students_from_file("SINHVIEN.DAT", students);
+
+    if (!students.empty()) {
+        create_index_by_id(students, "SVMASO.IDX");
+        create_index_by_name(students, "SVTH.IDX");
+        create_index_by_gpa(students, "SVDTB.IDX");
+        cout << "Đã tạo các tập tin chỉ mục.\n";
+    } else {
+        cerr << "Không có dữ liệu sinh viên để tạo chỉ mục.\n";
+    }
+
+    return 0;
+}
+
