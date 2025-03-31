@@ -1,0 +1,29 @@
+include <bits/stdc++.h>
+using namespace std;
+
+int p[10000001]; // Khai báo mảng p có kích thước tối đa 10^7 phần tử
+
+int main() {
+    int n;
+    cin >> n; // Đọc giá trị n từ đầu vào
+    int a[n]; // Khai báo mảng a với kích thước n
+    int q = 0; // Khởi tạo q = 0
+
+    // Đọc các phần tử của mảng a và cập nhật mảng p
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        p[a[i]]++;
+        q = max(q, a[i]);
+    }
+
+    // Xuất các phần tử đã sắp xếp
+    for (int i = 0; i <= q; i++) {
+        if (p[i] != 0) {
+            for (int j = 0; j < p[i]; j++) {
+                cout << i << " ";
+            }
+        }
+    }
+
+    return 0;
+}
